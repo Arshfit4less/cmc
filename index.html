@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Grade Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .results {
+            margin-top: 2rem;
+        }
+
+        .course-mark {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.2s;
+        }
+
+        .course-mark:hover {
+            transform: translateX(5px);
+        }
+
+        .final-result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #2c3e50;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .grade {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .grade-A {
+            color: #2ecc71;
+        }
+
+        .grade-B {
+            color: #3498db;
+        }
+
+        .grade-C {
+            color: #f1c40f;
+        }
+
+        .grade-D {
+            color: #e67e22;
+        }
+
+        .grade-F {
+            color: #e74c3c;
+        }
+
+        .error {
+            background: #fff3f3;
+            color: #e74c3c;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Course Grade Calculator</h1>
+        </div>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        // Get reference to output div
+        const output = document.getElementById('output');
+
+        // Array to store course marks
+        let courseMarks = [];
+
+        // Get number of courses from user
+        let numOfCourses = parseInt(prompt("How many courses did you take?"));
+
+        // Variables for calculations
+        let counter = 1;
+        let total = 0;
+
+        // Input validation for number of courses
+        if (isNaN(numOfCourses) || numOfCourses <= 0) {
+            output.innerHTML = '<div class="error">Please enter a valid number of courses greater than 0!</div>';
+        } else {
+            // Get marks for each course and calculate total
+            while (counter <= numOfCourses) {
+                // Get mark for current course and add to array
+                let mark = parseFloat(prompt(`Enter your mark for course ${counter}`));
+                
+                // Validate mark input
+                if (isNaN(mark) || mark < 0 || mark > 100) {
+                    output.innerHTML = '<div class="error">Invalid mark entered. Marks must be between 0 and 100!</div>';
+                    break;
+                }
+                
+                courseMarks.push(mark);
+                total += mark;
+                counter++;
+            }
+
+            // If all marks were valid, proceed with calculations and output
+            if (counter > numOfCourses) {
+                // Start building output HTML
+                let html = '<div class="results">';
+                html += '<h2>Your Course Marks:</h2>';
+                
+                // Display all course marks
+                for (let i = 0; i < courseMarks.length; i++) {
+                    html += `<div class="course-mark">Course ${i + 1}: ${courseMarks[i]}%</div>`;
+                }
+
+                // Calculate and round average
+                let average = total / numOfCourses;
+                let roundedAverage = average.toFixed(2);
+
+                // Determine grade and color class
+                let grade;
+                let gradeClass;
+                if (average >= 90 && average <= 100) {
+                    grade = "A+";
+                    gradeClass = "grade-A";
+                } else if (average >= 80 && average <= 89) {
+                    grade = "B";
+                    gradeClass = "grade-B";
+                } else if (average >= 70 && average <= 79) {
+                    grade = "C";
+                    gradeClass = "grade-C";
+                } else if (average >= 60 && average <= 69) {
+                    grade = "D";
+                    gradeClass = "grade-D";
+                } else if (average >= 0 && average < 60) {
+                    grade = "F";
+                    gradeClass = "grade-F";
+                } else {
+                    grade = "Error: Invalid average";
+                    gradeClass = "grade-F";
+                }
+
+                // Add final result to HTML
+                html += `<div class="final-result">
+                    <h2>Final Results</h2>
+                    <p>Your final average is ${roundedAverage}%</p>
+                    <div class="grade ${gradeClass}">Grade: ${grade}</div>
+                </div>`;
+
+                html += '</div>';
+                
+                // Display the results
+                output.innerHTML = html;
+            }
+        }
+    </script>
+</body>
+</html>
